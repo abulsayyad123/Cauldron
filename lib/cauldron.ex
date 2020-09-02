@@ -18,13 +18,24 @@ defmodule Cauldron do
     {:ok, intial_value}
   end
 
+  #toil with cast implementation which full Processes Mailbox
+  # def toil(server) do
+  #   GenServer.cast(server, :toil)
+  # end
+
+  #toil with call implementation it wait for the response it takes time but the Process Mailbox isn't full.
   def toil(server) do
-    GenServer.cast(server, :toil)
+    :ok = GenServer.call(server, :toil)
   end
 
   def handle_cast(:toil, state) do
     long_wait
     {:noreply, state+1}
+  end
+
+  def handle_call(:toil, _from, state) do
+    long_wait
+    {:reply, :ok, state+1}
   end
 
   defp message_queue_length(pid) do
